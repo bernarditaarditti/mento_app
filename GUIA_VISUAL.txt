@@ -1,0 +1,259 @@
+```
+╔════════════════════════════════════════════════════════════════════════════╗
+║                   MENTO - CONEXIÓN FRONTEND-BACKEND                       ║
+║                           ✅ COMPLETADO                                   ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📦 ARCHIVOS CREADOS/MODIFICADOS                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+CREADOS NUEVOS:
+  ✨ lib/api.ts                      → Funciones de conexión con backend
+  ✨ hooks/use-api.ts                → Hook personalizado para API
+  ✨ context/AuthContext.tsx         → Context para manejar sesión
+  ✨ .env.local                      → Variables de entorno
+  ✨ .env.example                    → Plantilla de env vars
+
+MODIFICADOS:
+  ✏️  app/layout.tsx                 → Agregué AuthProvider
+  ✏️  app/login/page.tsx             → Usa loginUser() del API
+  ✏️  app/register/page.tsx          → Implementé lógica de registro
+  ✏️  app/home/page.tsx              → Protegida, muestra usuario
+
+DOCUMENTACIÓN:
+  📖 FRONTEND_BACKEND_CONEXION.md    → Guía completa
+  📖 RESUMEN_CONEXION.md             → Resumen ejecutivo
+  📖 REFERENCIA_RAPIDA.md            → Copy-paste snippets
+  📖 CAMBIOS_REALIZADOS.md           → Lista de cambios
+  📖 lib/EJEMPLOS_API.ts             → Ejemplos básicos
+  📖 lib/EJEMPLOS_PRACTICOS.md       → Ejemplos completos
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🔗 CÓMO FUNCIONA                                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. USUARIO HACE CLIC EN BOTÓN
+   ↓
+2. SE LLAMA A UNA FUNCIÓN DE API
+   ↓ (ej: loginUser(email, password))
+3. LA FUNCIÓN HACE FETCH A /api/...
+   ↓
+4. BACKEND PROCESA Y DEVUELVE RESPUESTA
+   ↓
+5. FRONTEND MANEJA ÉXITO O ERROR
+   ↓
+6. UI SE ACTUALIZA CON RESULTADO
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 💻 USAR EN TUS PÁGINAS                                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+IMPORT PARA ACCEDER AL USUARIO:
+  import { useAuth } from "@/context/AuthContext"
+  const { user, isLoggedIn } = useAuth()
+
+IMPORT PARA LLAMAR AL BACKEND:
+  import { loginUser, registerUser, updateProgress } from "@/lib/api"
+  const response = await loginUser(email, password)
+
+USAR LA RESPUESTA:
+  if (response.success) {
+    // ✅ Éxito - response.data tiene los datos
+  } else {
+    // ❌ Error - response.message tiene el error
+  }
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ✨ FUNCIONES DISPONIBLES                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Authentication:
+  ✓ loginUser(email, password)
+  ✓ registerUser(email, password)
+
+User Data:
+  ✓ getUser(userId)
+
+Progress:
+  ✓ updateProgress(userId, data)
+  ✓ getProgress(userId)
+
+Onboarding:
+  ✓ saveOnboarding(userId, data)
+
+Generic:
+  ✓ apiCall(endpoint, { method, body })
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🚀 EJEMPLO RÁPIDO                                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+"use client"
+
+import { useState } from "react"
+import { loginUser } from "@/lib/api"
+import { useAuth } from "@/context/AuthContext"
+
+export default function LoginPage() {
+  const { login } = useAuth()
+  const [email, setEmail] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  const handleLogin = async () => {
+    setIsLoading(true)
+    const response = await loginUser(email, "password")
+    
+    if (response.success) {
+      login(response.data.user)
+      // Ir a home
+    } else {
+      setError(response.message)
+    }
+    
+    setIsLoading(false)
+  }
+
+  return (
+    <div>
+      <input value={email} onChange={(e) => setEmail(e.target.value)} />
+      {error && <p style={{color: "red"}}>{error}</p>}
+      <button onClick={handleLogin} disabled={isLoading}>
+        {isLoading ? "Cargando..." : "Login"}
+      </button>
+    </div>
+  )
+}
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📋 CONFIGURACIÓN NECESARIA                                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+✓ PASO 1: Verificar .env.local existe
+  Debe contener:
+  NEXT_PUBLIC_API_URL=http://localhost:3000
+
+✓ PASO 2: Backend corriendo
+  Asegúrate que tu backend esté en localhost:3000
+
+✓ PASO 3: Database conectada
+  El backend debe tener acceso a la database
+
+✓ PASO 4: Listo!
+  Ya puedes hacer login/registro
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🧪 PROBAR EN DEVTOOLS                                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. Abre DevTools (F12)
+2. Ve a Network tab
+3. Intenta hacer login
+4. Busca la llamada a /api/usuario/login
+5. Verifica:
+   ✓ Status: 200 (éxito) ✗ 4xx/5xx (error)
+   ✓ Request: email y contraseña
+   ✓ Response: datos del usuario
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ✅ PÁGINAS YA CONECTADAS                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+✓ /login              - Conectada, hace login con backend
+✓ /register           - Conectada, hace registro
+✓ /home               - Protegida, muestra usuario logueado
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🚧 PRÓXIMAS PÁGINAS A CONECTAR                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Onboarding (paso a paso):
+  → /onboarding/age           (guardar edad)
+  → /onboarding/gender        (guardar género)
+  → /onboarding/goals         (guardar metas)
+  → etc.
+  
+Usa: saveOnboarding(userId, data)
+
+Islas (juegos/actividades):
+  → /islands/family/level-1   (guardar progreso)
+  → /islands/work/level-1
+  → /islands/health/level-1
+  → /islands/relationships/level-1
+  
+Usa: updateProgress(userId, { island, level, score })
+
+Perfil:
+  → /profile                  (mostrar y actualizar datos)
+  
+Usa: getUser(userId)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📚 DOCUMENTACIÓN                                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Lee en este orden:
+
+1️⃣  RESUMEN_CONEXION.md
+    ↓ (entender la idea)
+
+2️⃣  REFERENCIA_RAPIDA.md
+    ↓ (copy-paste snippets)
+
+3️⃣  FRONTEND_BACKEND_CONEXION.md
+    ↓ (guía completa y detallada)
+
+4️⃣  lib/EJEMPLOS_PRACTICOS.md
+    ↓ (ver ejemplos de páginas)
+
+5️⃣  CAMBIOS_REALIZADOS.md
+    ↓ (entender qué se cambió)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ❓ PREGUNTAS COMUNES                                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+P: ¿Cómo accedo al usuario en cualquier página?
+R: import { useAuth } from "@/context/AuthContext"
+   const { user } = useAuth()
+
+P: ¿Cómo hago una llamada al backend?
+R: import { loginUser } from "@/lib/api"
+   const response = await loginUser(email, password)
+
+P: ¿Cómo protejo una página si no está logueado?
+R: if (!isLoggedIn) router.push("/login")
+   Ver ejemplo en REFERENCIA_RAPIDA.md
+
+P: ¿Qué es .env.local?
+R: Archivo de variables de entorno. Contiene:
+   NEXT_PUBLIC_API_URL=http://localhost:3000
+
+P: ¿Por qué NEXT_PUBLIC_?
+R: Porque esa variable debe estar disponible en el cliente (navegador)
+   Las variables sin NEXT_PUBLIC_ solo están en el servidor
+
+P: ¿Dónde reporto errores?
+R: Abre DevTools (F12) → Console tab
+   Ahí verás logs y errores
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🎉 ¡LISTO!                                                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Tu frontend está completamente conectado con el backend.
+
+Ahora puedes:
+  ✓ Hacer login/registro
+  ✓ Guardar datos del usuario
+  ✓ Obtener datos del usuario
+  ✓ Guardar progreso en islas
+  ✓ Acceder al usuario desde cualquier página
+
+Solo necesitas conectar las demás páginas siguiendo los ejemplos.
+
+¡Adelante! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════
+```
