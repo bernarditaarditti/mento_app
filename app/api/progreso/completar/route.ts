@@ -105,7 +105,8 @@ export async function POST(request: Request) {
       console.log(`🔄 Actualizando registro existente...`);
       const updateResult = await pool.query(
         `UPDATE ProgresoNivel 
-         SET completado = 1, fecha_completado = datetime('now') 
+         SET completado = 1, fecha_completado = NOW()
+
          WHERE id_usuario = $1 AND id_isla = $2 AND numero_nivel = $3`,
         [idUsuarioNum, idIslaNum, numeroNivelNum]
       );
@@ -115,7 +116,7 @@ export async function POST(request: Request) {
       console.log(`➕ Insertando nuevo registro...`);
       const insertResult = await pool.query(
         `INSERT INTO ProgresoNivel (id_usuario, id_isla, numero_nivel, completado, fecha_completado) 
-         VALUES ($1, $2, $3, 1, datetime('now'))`,
+         VALUES ($1, $2, $3, 1, NOW())`,
         [idUsuarioNum, idIslaNum, numeroNivelNum]
       );
       console.log(`✅ Registro insertado:`, insertResult);

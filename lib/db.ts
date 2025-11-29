@@ -1,13 +1,41 @@
+// lib/db.ts
+// lib/db.ts
+import { Pool } from "pg";
+
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL no está definida");
+}
+
+// Evitar crear múltiples pools en dev (hot reload de Next)
+declare global {
+  // eslint-disable-next-line no-var
+  var pgPool: Pool | undefined;
+}
+
+const poolInstance =
+  global.pgPool ??
+  new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false, // necesario para Neon
+    },
+  });
+
+if (process.env.NODE_ENV !== "production") {
+  global.pgPool = poolInstance;
+}
+
+export const pool = poolInstance;
+
+
 // Archivo desactivado para producción en Vercel.
 // Antes usaba better-sqlite3, pero ahora no lo necesitamos.
 // lib/db.ts
 // Stub de base de datos para que Vercel pueda buildear sin SQLite ni Postgres.
 
-export const pool = {
-  query: async () => {
-    throw new Error("Database not configured on this deployment");
-  },
-};
+// lib/db.ts
+
+// lib/db.ts
 
 
 /* import Database from "better-sqlite3";

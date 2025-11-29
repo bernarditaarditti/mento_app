@@ -14,12 +14,12 @@ export async function POST(req: Request) {
     if (existing.rows.length > 0) {
       return NextResponse.json({ success: false, message: "El email ya está registrado" }, { status: 409 });
     }
-
     const result = await pool.query(
       `INSERT INTO Usuario (email, contrasena, fecha_creacion, ultimo_inicio)
-       VALUES ($1, $2, datetime('now'), datetime('now')) RETURNING *`,
+       VALUES ($1, $2, NOW(), NOW()) RETURNING *`,
       [email, contrasena]
     );
+    
 
     const user = result.rows[0];
     const userId = user.Id_usuario || user.id_usuario;
