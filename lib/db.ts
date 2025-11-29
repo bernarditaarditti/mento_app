@@ -1,6 +1,14 @@
 // Archivo desactivado para producción en Vercel.
 // Antes usaba better-sqlite3, pero ahora no lo necesitamos.
-export {};
+// lib/db.ts
+// Stub de base de datos para que Vercel pueda buildear sin SQLite ni Postgres.
+
+export const pool = {
+  query: async () => {
+    throw new Error("Database not configured on this deployment");
+  },
+};
+
 
 /* import Database from "better-sqlite3";
 import path from "path";
