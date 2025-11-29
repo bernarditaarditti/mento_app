@@ -1,4 +1,8 @@
-import Database from "better-sqlite3";
+// Archivo desactivado para producción en Vercel.
+// Antes usaba better-sqlite3, pero ahora no lo necesitamos.
+export {};
+
+/* import Database from "better-sqlite3";
 import path from "path";
 
 // Evita múltiples conexiones en desarrollo en Next.js (hot reload)
@@ -148,3 +152,4 @@ export function initializeDatabase() {
 
 // Inicializar la base de datos al cargar el módulo
 initializeDatabase();
+ */
